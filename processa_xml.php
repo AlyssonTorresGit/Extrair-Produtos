@@ -25,7 +25,6 @@ function loadXmlWithoutNamespaces($filePath)
     return simplexml_load_string($xmlStr);
 }
 
-
 error_reporting(E_ALL);
 ini_set('max_execution_time', 0);
 
@@ -38,17 +37,29 @@ $codigoSequencial = 1;
 $comandos = [];
 $relatorio = [];
 
+$tipos_validos = ['00', '10', '20', '30', '40', '41', '50', '51', '60', '61', '70', '90', '101', '102', '103', '201', '202', '203', '300', '400', '500', '900'];
+
 foreach ($_FILES['xmls']['tmp_name'] as $tmpPath) {
     $xml = loadXmlWithoutNamespaces($tmpPath);
     if (!$xml) continue;
 
-    // Detecta se é NFe ou CF-e
+    // Detecta tipo de XML
     if (isset($xml->NFe->infNFe)) {
-        $inf = $xml->NFe->infNFe; // NFe
+        $inf = $xml->NFe->infNFe;
+        $modelo = (string)($inf->ide->mod ?? '');
+    } elseif (isset($xml->infNFe)) {
+        $inf = $xml->infNFe;
+        $modelo = (string)($inf->ide->mod ?? '');
     } elseif (isset($xml->CFe->infCFe)) {
-        $inf = $xml->CFe->infCFe; // CF-e
+        $inf = $xml->CFe->infCFe;
+        $modelo = '59'; // CF-e SAT
     } else {
         continue; // XML desconhecido
+    }
+
+    // Apenas aceita modelos conhecidos (55 = NFe, 65 = NFC-e, 59 = CF-e SAT)
+    if (!in_array($modelo, ['55', '65', '59'])) {
+        continue;
     }
 
     foreach ($inf->det as $det) {
@@ -63,13 +74,59 @@ foreach ($_FILES['xmls']['tmp_name'] as $tmpPath) {
         $CFOP = (string)($prod->CFOP ?? '');
         $cEAN = (string)($prod->cEAN ?? '');
 
-        // Pega CST ou CSOSN do ICMS
-        $icmsTipo = array_keys(get_object_vars($imposto->ICMS))[0] ?? '';
-        $cst_icms = (string)(
-            $imposto->ICMS->$icmsTipo->CST ??
-            $imposto->ICMS->$icmsTipo->CSOSN ??
-            '500'
-        );
+        $cst_icms = '500'; // valor padrão
+        if (isset($imposto->ICMS)) {
+            $icms = $imposto->ICMS;
+            foreach ($icms->children() as $tipo => $info) {
+                if (in_array((string)$info->CST, $tipos_validos)) {
+                    $cst_icms = (string)$info->CST;
+                } elseif (in_array((string)$info->CSOSN, $tipos_validos)) {
+                    $cst_icms = (string)$info->CSOSN;
+                }
+            }
+
+            // if (isset($icms->ICMS00)) {
+            //     $cst_icms = (string)($icms->ICMS00->CST ?? '00');
+            // } elseif (isset($icms->ICMS10)) {
+            //     $cst_icms = (string)($icms->ICMS10->CST ?? '10');
+            // } elseif (isset($icms->ICMS20)) {
+            //     $cst_icms = (string)($icms->ICMS20->CST ?? '20');
+            // } elseif (isset($icms->ICMS30)) {
+            //     $cst_icms = (string)($icms->ICMS30->CST ?? '30');
+            // } elseif (isset($icms->ICMS40)) {
+            //     $cst_icms = (string)($icms->ICMS40->CST ?? '40');
+            // } elseif (isset($icms->ICMS51)) {
+            //     $cst_icms = (string)($icms->ICMS51->CST ?? '51');
+            // } elseif (isset($icms->ICMS60)) {
+            //     $cst_icms = (string)($icms->ICMS60->CST ?? '60');
+            // } elseif (isset($icms->ICMS61)) {
+            //     $cst_icms = (string)($icms->ICMS60->CST ?? '61');
+            // } elseif (isset($icms->ICMS70)) {
+            //     $cst_icms = (string)($icms->ICMS70->CST ?? '70');
+            // } elseif (isset($icms->ICMS90)) {
+            //     $cst_icms = (string)($icms->ICMS90->CST ?? '90');
+
+            //     // Simples Nacional
+            // } elseif (isset($icms->ICMSSN101)) {
+            //     $cst_icms = (string)($icms->ICMSSN101->CSOSN ?? '101');
+            // } elseif (isset($icms->ICMSSN102)) {
+            //     $cst_icms = (string)($icms->ICMSSN102->CSOSN ?? '102');
+            // } elseif (isset($icms->ICMSSN103)) {
+            //     $cst_icms = (string)($icms->ICMSSN103->CSOSN ?? '103');
+            // } elseif (isset($icms->ICMSSN300)) {
+            //     $cst_icms = (string)($icms->ICMSSN300->CSOSN ?? '300');
+            // } elseif (isset($icms->ICMSSN400)) {
+            //     $cst_icms = (string)($icms->ICMSSN400->CSOSN ?? '400');
+            // } elseif (isset($icms->ICMSSN500)) {
+            //     $cst_icms = (string)($icms->ICMSSN500->CSOSN ?? '500');
+            // } elseif (isset($icms->ICMSSN900)) {
+            //     $cst_icms = (string)($icms->ICMSSN900->CSOSN ?? '900');
+            // }
+        }
+        // o trecho acima 
+        //Cobre explicitamente todos os tipos de ICMS (tanto do regime normal quanto do Simples Nacional);
+        // Passa a suportar NFC-e (modelo 65) de forma garantida;
+        // Garante mais estabilidade mesmo em XMLs malformados ou diferentes por estado
 
         // Verifica se o produto já foi processado antes
         $stmt = $conn->prepare("SELECT xProd FROM produtos_xml WHERE xProd = ? AND cProd = ?");
@@ -94,9 +151,19 @@ foreach ($_FILES['xmls']['tmp_name'] as $tmpPath) {
             'cst'   => $cst_icms,
             'vUnCom' => $vUnCom,
             'tributacao' => match ($cst_icms) {
-                '500' => 'ICMS Isento / Substituição Tributária',
-                '102' => 'Simples Nacional - Tributada',
-                default => 'Outro CST'
+                '00' => 'Tributada integralmente',
+                '10' => 'Tributada e com ST',
+                '20' => 'Com redução de base',
+                '30' => 'Isenta com ST',
+                '40', '41', '50' => 'Isenta ou não tributada',
+                '60' => 'ST já retido',
+                '70' => 'Com redução e ST',
+                '90' => 'Outros',
+                '101' => 'SN com crédito',
+                '102', '103', '300', '400' => 'SN isento',
+                '500' => 'Isento ou ST',
+                '900' => 'SN Outros',
+                default => 'CST desconhecido'
             }
         ];
     }

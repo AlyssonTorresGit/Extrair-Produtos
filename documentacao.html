@@ -1,8 +1,10 @@
+-Modelos dos tipos de notas:
 <mod>55 nfe
 <mod>65 nfce
 <mod>59 cfe
-
-    Tabela de tags ICMS no XML NFe segundo o regime tributário e situação
+***********************************************************************************************
+    
+-Tabela de tags ICMS no XML NFe segundo o regime tributário e situação
 Tag XML	Descrição	Regime Tributário	CST / CSOSN Exemplo
 <ICMS00>	ICMS integral	Regime Normal (Lucro Real/Presumido)	CST = 00 (Tributada integral)
 <ICMS10>	ICMS com ST (Substituição Tributária)	Regime Normal	CST = 10
@@ -23,8 +25,9 @@ Tag XML	Descrição	Regime Tributário	CST / CSOSN Exemplo
 <ICMSSN500>	Simples Nacional, ICMS cobrado anteriormente	Simples Nacional	CSOSN = 500
 <ICMSSN900>	Simples Nacional, outros casos	Simples Nacional	CSOSN = 900
 
-    
-    📘 Relação prática CFOP × CST/CSOSN (e a tag <ICMS...>)
+******************************************************************************************
+
+-Relação prática CFOP × CST/CSOSN (e a tag <ICMS...>)
 Abaixo vai uma tabela prática com exemplos reais de combinações comuns de CFOP + CST ou CSOSN, e a tag ICMS correspondente no XML:
 
 CFOP	Descrição CFOP	CST/CSOSN	Tag XML esperada	Observação
@@ -48,3 +51,20 @@ CFOP	Descrição CFOP	CSOSN	Tag XML esperada	Observação
 6.405	Venda sujeita a ST fora do estado	202	<ICMSSN202>	Com ST sem crédito
 5.105	Venda com isenção	500	<ICMSSN500>	ICMS cobrado anteriormente
 5.101	Venda com tratamento especial	900	<ICMSSN900>	Outros casos (ICMS diferido, etc.)
+
+**************************************************************************************************
+
+processa_xml.php Lê arquivos XML de NFe e CFe;
+ Extrai:
+ cProd – código do produto
+ xProd – descrição
+ vUnCom – valor unitário
+ uCom (limita a 3 letras) – unidade
+ NCM – código NCM
+ CFOP
+ cEAN – código de barras
+ CST/CSOSN do ICMS, com fallback para 500
+Verifica duplicidade na tabela produtos_xml;
+ Gera comandos INSERT ou UPDATE via funções externas (gerar_insert_icms, gerar_update_icms);
+ Cria um relatório (relatorio_html.php) e um comando SQL final;
+ Inclui o layout final com relatorio_cmds.php.
