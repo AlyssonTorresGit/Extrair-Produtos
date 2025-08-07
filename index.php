@@ -4,14 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="style.css">
     <title>Extrair Produtos</title>
 </head>
 
 <body>
     <main class="xml">
         <div class="container">
-            <h1>Importar XML</h1>
+            <h1>Recuperar Produtos</h1>
             <form action="limpar_controle.php" method="POST" target="output"
                 onsubmit="return confirm('Tem certeza que quer limpar tudo?');">
                 <button class="btn-limpar btn destaque-btn" type="submit" class="btn-danger">

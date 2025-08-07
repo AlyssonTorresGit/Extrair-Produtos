@@ -1,0 +1,167 @@
+<?php
+
+function gerar_update_icms($cst, $codigoFinal, $xProd, $NCM, $CFOP, $unidade, $vUnCom, $cEAN)
+{
+    // Campos comuns (sempre presentes)
+    $campos = [
+        "CODPRO" => $codigoFinal,
+        "DESPRO" => "'$xProd'",
+        "DESPRO_2" => "'$xProd'",
+        "CLAFIS" => "'$NCM'",
+        "CFOP_ESTADO" => $cst === '500' ? 5405 : 5102,
+        "UNISAI_1" => "'$unidade",
+        "UNISAI_2" => "'$unidade'",
+        "PREVAR" => $vUnCom,
+        "TRI002" => "'$cst'",
+        "CODBAR" => "'$cEAN'",
+        "CODMAR" => "1",
+        "CODMAR2" => "1",
+        "STATUS" => "0",
+        "CODGRU" => "1",
+        "CODFOR" => "1",
+        "ESTMIN" => "0",
+        "ESTMAX" => "0",
+        "PESPRO" => "0",
+        "PESLIQ" => "0",
+        "PRECUS" => "0",
+        "PREATA" => "0",
+        "PRE004" => "0",
+        "PRE005" => "0",
+        "PRESUG" => "0",
+        "FATPRO" => "1",
+        "PERDES" => "0",
+        "PERCOM" => "0",
+        "CODSET" => "1",
+        "QTDPRO" => "0",
+        "VALPRO" => "0",
+        "CODENQ" => "'999'",
+        "DATCAD" => "'" . date("Y-m-d") . "'",
+        "MKPATA" => "0",
+        "MKPVAR" => "0",
+        "MKPVD4" => "0",
+        "MKPVD5" => "0",
+        "LANBRE" => "0",
+        "MODBST" => "'4'",
+        "MVAPRO" => 0,
+        "REDINT" => 0,
+        "REDEXT" => 0,
+        "CSTPIS_DEV_FOR" => "NULL",
+        "CSTCOF_DEV_FOR" => "NULL",
+        "PISPRO_DEV_FOR" => "NULL",
+        "COFPRO_DEV_FOR" => "NULL",
+        "CSTPIS_SAI_BON" => "NULL",
+        "CSTCOF_SAI_BON" => "NULL",
+        "PISPRO_SAI_BON" => "NULL",
+        "COFPRO_SAI_BON" => "NULL",
+        "CSTPIS_DEV_CLI" => "NULL",
+        "CSTCOF_DEV_CLI" => "NULL",
+        "PISPRO_DEV_CLI" => "NULL",
+        "COFPRO_DEV_CLI" => "NULL",
+        "CSTPIS_ENT_IND" => "NULL",
+        "CSTCOF_ENT_IND" => "NULL",
+        "CSTPIS_ENT_BON" => "NULL",
+        "CSTCOF_ENT_BON" => "NULL",
+        "CSTPIS_RET_IND" => "NULL",
+        "CSTCOF_RET_IND" => "NULL",
+        "CFOP_RET_IND" => "NULL",
+        "INDESC" => "'1'",
+        "PERLUC" => "'0'",
+        "DIAVAL" => "'0'",
+        "ALI_SUP_CON_FIN" => "'0'",
+        "VAL_ICMS_PRO_SUBSTITUTO" => "'0'",
+        "VAL_ICMSST_RET_OP_ANT" => "'0'",
+        "ALI_RED_BC_EFET" => "'0'",
+        "VAL_BC_EFET" => "'0'",
+        "VALPARGLP" => "'0'",
+        "BC_ST_DEST" => "'0'",
+        "VAL_ST_DEST" => "0",
+        "MONOFA" => "1",
+        "PROFEC" => "1",
+        "UNIEXT_1" => "1",
+        "UNIEXT_2" => "1",
+        "CUSIPI" => "0",
+        "CUSFRE" => "0",
+        "CUSIST" => "0",
+        "CUSSEG" => "0",
+        "CUSOUT" => "0",
+        "VEREST" => "1",
+        "PROFRA" => "0",
+        "IPIPRO" => 0,
+        "PISPRO" => 0,
+        "COFPRO" => 0,
+        "IMPPRO" => 0,
+        "TRI001" => "'0'",
+        "CSTIPI" => "'99'",
+        "CSTIPI_ENT" => "'49'",
+        "CSTPIS" => "'99'",
+        "CSTPIS_ENT" => "'49'",
+        "CSTCOF" => "'99'",
+        "CSTCOF_ENT" => "'49'",
+        "REDINT_ICMS_NORMAL" => 0,
+        "REDEXT_ICMS_NORMAL" => 0,
+        "MODBIC" => "'3'",
+        "ALIICMS_ST" => 0,
+        "AGRINT" => 0,
+        "AGREXT" => 0,
+        "DATAJU" => "NULL",
+        "QUEPRO" => 0,
+        "VENEXT" => 0,
+        "ALIINT_ICMS" => 0,
+        "CODTPI" => 0
+
+    ];
+
+    // Campos adicionais específicos por CST
+    $camposAdicionais = [];
+
+    if ($cst === '500') {
+        $camposAdicionais = [
+            "TRI002_NC" => "'500'",
+            "TRI002_CF" => "'500'",
+            "TRI002_SN" => "'500'",
+            "TRI002_SN_NC" => "'500'",
+            "TRI002_SN_CF" => "'500'",
+            "TRIEXT" => "'500'",
+            "TRIEXT_NC" => "'500'",
+            "TRIEXT_CF" => "'500'",
+            "TRIEXT_SN" => "'500'",
+            "TRIEXT_SN_NC" => "'500'",
+            "TRIEXT_SN_CF" => "'500'",
+            "CFOP_FORA" => 6404,
+            "CFOP_ESTADO_NC" => 5405,
+            "CFOP_FORA_NC" => 6404,
+            "CST_ICMS_ENTRADA" => "'60'",
+            "CFOP_ENTRADA" => 1403,
+            "CFOP_ENTRADA_FORA" => 2403
+        ];
+    } elseif ($cst === '102') {
+        $camposAdicionais = [
+            "TRI002_NC" => "'102'",
+            "TRI002_CF" => "'102'",
+            "TRI002_SN" => "'102'",
+            "TRI002_SN_NC" => "'102'",
+            "TRI002_SN_CF" => "'102'",
+            "TRIEXT" => "'102'",
+            "TRIEXT_NC" => "'102'",
+            "TRIEXT_CF" => "'102'",
+            "TRIEXT_SN" => "'102'",
+            "TRIEXT_SN_NC" => "'102'",
+            "TRIEXT_SN_CF" => "'102'",
+            "CFOP_FORA" => 6102,
+            "CFOP_ESTADO_NC" => 5102,
+            "CFOP_FORA_NC" => 6102,
+            "CST_ICMS_ENTRADA" => "'90'",
+            "CFOP_ENTRADA" => 1102,
+            "CFOP_ENTRADA_FORA" => 2102
+        ];
+    }
+
+    // Junta campos comuns + adicionais
+    $todos = array_merge($campos, $camposAdicionais);
+
+    // Monta o SQL
+    $colunas = implode(", ", array_keys($todos));
+    $valores = implode(", ", array_values($todos));
+
+    return "UPDATE INTO SAU1007 ($colunas) VALUES ($valores);";
+}
