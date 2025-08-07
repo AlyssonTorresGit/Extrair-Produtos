@@ -1,5 +1,5 @@
 <?php
-require_once(__DIR__ . '/../../configs/config.php');
+require_once('config.php');
 
 $stmt = $conn->prepare("DELETE FROM produtos_xml;");
 $stmt->execute();

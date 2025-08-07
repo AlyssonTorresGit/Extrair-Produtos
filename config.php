@@ -21,7 +21,7 @@ try {
     exit;
 }
 
-$base_url = "http://" . $_SERVER['HTTP_HOST'] . "/Extrair-produtos/";
-$versao_sistema = "3.0";
+$base_url = "http://" . $_SERVER['HTTP_HOST'] . "/produtos-xml/";
+$versao_sistema = "4.0";
 
-require_once '/utils.php';
+require_once('/utils.php');

@@ -7,7 +7,8 @@
 /**
  * Redireciona para uma URL relativa ao $base_url
  */
-function redirecionar($caminho = '') {
+function redirecionar($caminho = '')
+{
     global $base_url;
     header("Location: " . rtrim($base_url, '/') . '/' . ltrim($caminho, '/'));
     exit;
@@ -16,7 +17,8 @@ function redirecionar($caminho = '') {
 /**
  * Exibe uma mensagem de erro personalizada e encerra
  */
-function erro($mensagem = 'Erro desconhecido') {
+function erro($mensagem = 'Erro desconhecido')
+{
     echo "<div style='color: red; font-weight: bold; padding: 10px;'>Erro: $mensagem</div>";
     exit;
 }
@@ -24,9 +26,9 @@ function erro($mensagem = 'Erro desconhecido') {
 /**
  * Escreve em um arquivo de log simples
  */
-function registrar_log($mensagem, $arquivo = 'logs/erros.log') {
+function registrar_log($mensagem, $arquivo = 'logs/erros.log')
+{
     $data = date('Y-m-d H:i:s');
     $linha = "[$data] $mensagem\n";
     file_put_contents($arquivo, $linha, FILE_APPEND);
 }
-?>
