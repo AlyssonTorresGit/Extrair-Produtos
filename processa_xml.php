@@ -1,7 +1,7 @@
 <?php
 header('Content-Type: text/html; charset=utf-8');
-require_once(__DIR__ . '/../../configs/variaveis.php');
-require_once(PATH_CONFIGS . 'config.php');
+require_once('variaveis.php');
+require_once('config.php');
 require_once('gerar_update_icms.php');
 require_once('gerar_insert_icms.php');
 function loadXmlWithoutNamespaces($filePath)
