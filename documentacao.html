@@ -1,0 +1,50 @@
+<mod>55 nfe
+<mod>65 nfce
+<mod>59 cfe
+
+    Tabela de tags ICMS no XML NFe segundo o regime tributário e situação
+Tag XML	Descrição	Regime Tributário	CST / CSOSN Exemplo
+<ICMS00>	ICMS integral	Regime Normal (Lucro Real/Presumido)	CST = 00 (Tributada integral)
+<ICMS10>	ICMS com ST (Substituição Tributária)	Regime Normal	CST = 10
+<ICMS20>	ICMS com redução base cálculo	Regime Normal	CST = 20
+<ICMS30>	Isenção ou não tributada	Regime Normal	CST = 30
+<ICMS40>	Isenção ICMS	Regime Normal	CST = 40
+<ICMS41>	Não tributada	Regime Normal	CST = 41
+<ICMS50>	Suspensão ICMS	Regime Normal	CST = 50
+<ICMS51>	Diferimento ICMS	Regime Normal	CST = 51
+<ICMS60>	ICMS cobrado anteriormente	Regime Normal	CST = 60
+<ICMS70>	ICMS com ST e redução	Regime Normal	CST = 70
+<ICMS90>	Outros	Regime Normal	CST = 90
+
+Tag XML	Descrição	Regime Tributário	CST / CSOSN Exemplo
+<ICMSSN102>	Simples Nacional, tributada por substituição (Suspensão)	Simples Nacional	CSOSN = 102
+<ICMSSN201>	Simples Nacional, com ST e Diferimento	Simples Nacional	CSOSN = 201
+<ICMSSN202>	Simples Nacional, com ST e sem Diferimento	Simples Nacional	CSOSN = 202
+<ICMSSN500>	Simples Nacional, ICMS cobrado anteriormente	Simples Nacional	CSOSN = 500
+<ICMSSN900>	Simples Nacional, outros casos	Simples Nacional	CSOSN = 900
+
+    
+    📘 Relação prática CFOP × CST/CSOSN (e a tag <ICMS...>)
+Abaixo vai uma tabela prática com exemplos reais de combinações comuns de CFOP + CST ou CSOSN, e a tag ICMS correspondente no XML:
+
+CFOP	Descrição CFOP	CST/CSOSN	Tag XML esperada	Observação
+5.101	Venda de produção dentro do estado	00	<ICMS00>	ICMS integral
+6.101	Venda de produção fora do estado	00	<ICMS00>	ICMS integral
+5.102	Venda mercadoria adquirida de terceiros (dentro)	00	<ICMS00>	ICMS integral
+6.102	Venda mercadoria adquirida de terceiros (fora)	00	<ICMS00>	ICMS integral
+5.405	Venda sujeita à ST (Substituição Tributária)	10	<ICMS10>	com ST
+6.405	Venda ST fora do estado	10	<ICMS10>	com ST
+5.405	Venda com isenção ou não tributada	40, 41	<ICMS40>, <ICMS41>	depende do caso
+1.101	Compra para industrialização (dentro)	00	<ICMS00>	Entrada com crédito
+2.101	Compra para industrialização (fora)	00	<ICMS00>	Entrada com crédito
+1.102	Compra para comercialização	00	<ICMS00>	Entrada com crédito
+1.949	Outras entradas	40	<ICMS40>	Isenção ou não tributada
+
+📙 Para Simples Nacional (CSOSN)
+CFOP	Descrição CFOP	CSOSN	Tag XML esperada	Observação
+5.102	Venda mercadoria dentro do estado	102	<ICMSSN102>	Sem crédito de ICMS
+6.102	Venda mercadoria fora do estado	102	<ICMSSN102>	Sem crédito de ICMS
+5.405	Venda sujeita a ST	201	<ICMSSN201>	Com ST e com crédito presumido
+6.405	Venda sujeita a ST fora do estado	202	<ICMSSN202>	Com ST sem crédito
+5.105	Venda com isenção	500	<ICMSSN500>	ICMS cobrado anteriormente
+5.101	Venda com tratamento especial	900	<ICMSSN900>	Outros casos (ICMS diferido, etc.)
