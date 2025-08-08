@@ -150,6 +150,23 @@ foreach ($_FILES['xmls']['tmp_name'] as $tmpPath) {
         ];
     }
 }
+require_once 'funcoes_xml.php';
+
+$tipoXml = identificarTipoXML($xml);
+
+if ($tipoXml === 'NFe' && isset($xml->NFe->infNFe->det)) {
+    foreach ($xml->NFe->infNFe->det as $det) {
+        $dadosProduto = extrairProdutoXML($det);
+        // usar $dadosProduto['cProd'], $dadosProduto['xProd'], etc.
+    }
+} elseif ($tipoXml === 'CFe' && isset($xml->infCFe->det)) {
+    foreach ($xml->infCFe->det as $det) {
+        $dadosProduto = extrairProdutoXML($det);
+        // usar $dadosProduto['cProd'], $dadosProduto['xProd'], etc.
+    }
+} else {
+    echo "XML com estrutura desconhecida.";
+}
 
 // Gerar strings
 $comando_final = implode("\n\n", $comandos);

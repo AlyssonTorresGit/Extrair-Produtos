@@ -9,7 +9,7 @@ function gerar_insert_icms($cst, $codigoFinal, $xProd, $NCM, $CFOP, $unidade, $v
         "DESPRO_2" => "'$xProd'",
         "CLAFIS" => "'$NCM'",
         "CFOP_ESTADO" => $cst === '500' ? 5405 : 5102,
-        "UNISAI_1" => "'$unidade",
+        "UNISAI_1" => "'$unidade'",
         "UNISAI_2" => "'$unidade'",
         "PREVAR" => $vUnCom,
         "TRI002" => "'$cst'",
