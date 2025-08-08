@@ -9,7 +9,7 @@ function gerar_update_icms($cst, $codigoFinal, $xProd, $NCM, $CFOP, $unidade, $v
         "DESPRO_2" => "'$xProd'",
         "CLAFIS" => "'$NCM'",
         "CFOP_ESTADO" => $cst === '500' ? 5405 : 5102,
-        "UNISAI_1" => "'$unidade",
+        "UNISAI_1" => "'$unidade'",
         "UNISAI_2" => "'$unidade'",
         "PREVAR" => $vUnCom,
         "TRI002" => "'$cst'",
@@ -114,7 +114,7 @@ function gerar_update_icms($cst, $codigoFinal, $xProd, $NCM, $CFOP, $unidade, $v
     // Campos adicionais específicos por CST
     $camposAdicionais = [];
 
-    if ($cst === '500') {
+    if ($cst === '500' || '60' || '30') {
         $camposAdicionais = [
             "TRI002_NC" => "'500'",
             "TRI002_CF" => "'500'",
@@ -134,7 +134,7 @@ function gerar_update_icms($cst, $codigoFinal, $xProd, $NCM, $CFOP, $unidade, $v
             "CFOP_ENTRADA" => 1403,
             "CFOP_ENTRADA_FORA" => 2403
         ];
-    } elseif ($cst === '102') {
+    } elseif ($cst === '102' || '00' || '40') {
         $camposAdicionais = [
             "TRI002_NC" => "'102'",
             "TRI002_CF" => "'102'",
