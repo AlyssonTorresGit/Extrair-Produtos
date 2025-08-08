@@ -13,11 +13,12 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <title>Prudutos Gerados</title>
 </head>
 
 <body>
-    <h2>Relatório de Produtos Processados</h2>
+    <h1>Relatório de Produtos Processados</h1>
     <main class="relatorio">
         <div class="container">
             <table>
@@ -26,19 +27,19 @@ $produtos = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <th>Código</th>
                         <th>Produto</th>
                         <th>Preço</th>
-                        <th>Un</th>
+                        <th>Unid</th>
                         <th>CST</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php foreach ($produtos as $produto): ?>
-                        <tr>
-                            <td><?= htmlspecialchars($produto['cProd']) ?></td>
-                            <td><?= htmlspecialchars($produto['xProd']) ?></td>
-                            <td><?= 'R$ ' . number_format((float)$produto['vUnCom'], 2, ',', '.') ?></td>
-                            <td><?= htmlspecialchars($produto['unidade']) ?></td>
-                            <td><?= htmlspecialchars($produto['CST_ICMS']) ?></td>
-                        </tr>
+                    <tr>
+                        <td><?= htmlspecialchars($produto['cProd']) ?></td>
+                        <td><?= htmlspecialchars($produto['xProd']) ?></td>
+                        <td><?= 'R$ ' . number_format((float)$produto['vUnCom'], 2, ',', '.') ?></td>
+                        <td><?= htmlspecialchars($produto['unidade']) ?></td>
+                        <td><?= htmlspecialchars($produto['CST_ICMS']) ?></td>
+                    </tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>

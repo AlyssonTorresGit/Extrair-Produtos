@@ -30,6 +30,7 @@ function obterInfoTributaria($cfop, $tagICMS)
         'ICMS41' => ['descricao' => 'Não tributada', 'regime' => 'Normal'],
         'ICMS51' => ['descricao' => 'Diferimento do ICMS', 'regime' => 'Normal'],
         'ICMS60' => ['descricao' => 'ICMS cobrado anteriormente (ST)', 'regime' => 'Normal'],
+        'ICMS61' => ['descricao' => 'ICMS cobrado anteriormente por substituição tributária – Simples Nacional para contribuinte do regime normal', 'regime' => 'normal'],
         'ICMS90' => ['descricao' => 'Outras situações de ICMS', 'regime' => 'Normal'],
 
         // SIMPLES NACIONAL
